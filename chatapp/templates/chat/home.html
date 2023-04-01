@@ -1,0 +1,20 @@
+{% extends 'chat/base.html' %}
+
+{% block search %}
+
+<div class="container mt-5">
+    <h1 class="container mt-5 mb-5">Tìm kiếm trang cá nhân</h1>
+    <form class="d-flex" role="search" action ="" method = "post">
+        {% csrf_token %} 
+        {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+        <input class="form-control me-2" type="search" placeholder="Search" name="name" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+</div>
+{% endblock search %}

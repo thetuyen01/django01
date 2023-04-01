@@ -9,6 +9,8 @@ from cart.models import Cart
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 # register
 
@@ -38,7 +40,7 @@ def register(request):
             auth_token = str(uuid.uuid4())
             profile_obj = Profile.objects.create(user = obj_user, auth_token=auth_token)
             profile_obj.save()
-            send_mail_after_registration(email=email, token=auth_token)
+            send_mail_after_registration(email=email, token=auth_token, request=request)
             messages.success(request, "tạo tài khoảng thành công vui lòng kiểm tra email để xác thực")
             return redirect('account:register')
         except Exception as e:
@@ -67,12 +69,14 @@ def verify(request,auth_token):
 
 # send email register
 
-def send_mail_after_registration(email , token):
-    subject = "Your acccuss  need to be verified"
-    message = f"Vui long truy cap vao lien ket de xac thuc tai khoan http://127.0.0.1:8000/account/verify/{token}"
+def send_mail_after_registration(email, token, request):
+    current_site = get_current_site(request)
+    domain = current_site.domain
+    subject = 'Verify your account'
+    message = f'Please click on the link to verify your account: http://{domain}/account/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
-    send_mail(subject, message , email_from , recipient_list)
+    send_mail(subject, message, email_from, recipient_list)
 
 
 
@@ -85,8 +89,13 @@ def login_(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request,user)
-            return redirect('core:index')
+            profile = Profile.objects.get(user=user)
+            if profile.is_verified == True:
+                login(request,user)
+                return redirect('core:index')
+            else:
+                messages.info(request, "Vui lòng check gmail để xác thực tài khoảng")
+                return redirect('account:login')
         else:
             messages.info(request, "Tài khoảng hoặc mật khẩu không đúng")
             return redirect('account:login')
@@ -111,7 +120,7 @@ def forgetpassword(request):
             profile_obj = Profile.objects.get(user = user_obj)
             profile_obj.forget_password_token= token
             profile_obj.save()
-            sen_forget_password_mail(email=email, token=token)
+            sen_forget_password_mail(email=email, token=token, request=request)
             messages.success(request, 'Vui lòng kiểm tra email để forgetpassword')
             return redirect('account:forgetpassword')
 
@@ -145,15 +154,16 @@ def change(request, token):
 
 # send email forgetpassword
 
-
-def sen_forget_password_mail(email,token):
+    
+def sen_forget_password_mail(email,token, request):
+    current_site = get_current_site(request)
+    domain = current_site.domain
     subject = 'You forget password link'
-    message = f'Hi, click on the link to reset your http://127.0.0.1:8000/account/change/{token}'
+    message = f'Hi, click on the link to reset your account: http://{domain}/account/change/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message, email_from, recipient_list)
     return True
-                    
 
 
 # đổi mật khẩu

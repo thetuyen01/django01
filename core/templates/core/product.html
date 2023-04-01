@@ -18,7 +18,7 @@
             <a class="nav-link" href="{% url 'core:contact' %}">Contact</a>
           </li>
         </ul>
-        <form class="d-flex">
+        <form class="d-flex" action="{% url 'core:search' %}" method="GET">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
@@ -44,10 +44,10 @@
           </li>
           {% else %}
           <li li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
+            <a class="nav-link" href="{% url 'account:login' %}">Login</a>
           </li>
           <li li class="nav-item">
-            <a class="nav-link" href="#">Signup</a>
+            <a class="nav-link" href="{% url 'account:register' %}">Signup</a>
           </li>
     </ul>
     {% endif %}

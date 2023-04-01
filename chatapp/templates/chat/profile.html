@@ -1,0 +1,24 @@
+{% extends 'chat/base.html' %}
+
+{% block profile %}
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ user_.username }}</h5>
+            <p class="card-text">{{ user_.email }}</p>
+            <p class="card-text">{{ user_.date_joined }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <form action="{% url 'chatapp:message' user_.pk %}" method="get">
+          {% csrf_token %}
+        <button type="submit" name="id" value = "{{user_.pk}}" class="btn-primary">nhắn tin</button>
+      </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock profile %}

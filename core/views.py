@@ -81,10 +81,13 @@ def cart__(request):
     if request.user.is_authenticated:
         if request.method == "GET":
             user = request.user
-            cart_ = Cart.objects.get(user = user)
-            orderitems = OrtherItem.objects.filter(cart = cart_)
-            count = orderitems.count()
-            return render(request, 'core/cart.html',{'orderitems':orderitems,'cart':cart_,'count':count})
+            cart_ = get_object_or_404(Cart, user=user)
+            if cart_:
+                orderitems = OrtherItem.objects.filter(cart = cart_)
+                count = orderitems.count()
+                return render(request, 'core/cart.html',{'orderitems':orderitems,'cart':cart_,'count':count})
+            else:
+                return redirect('account:register')
         # delete Orderitem
         if request.method == "POST":
             id= request.POST.get("id")

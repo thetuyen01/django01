@@ -55,6 +55,23 @@
 {% endblock header %}
 
 {% block trangcanhan %}
+<div class="container mt-5">
+  <h1 class="container mt-5 mb-5">Tìm kiếm trang cá nhân người lạ</h1>
+  <form class="d-flex" role="search" action ="{% url 'chatapp:home' %}" method = "POST">
+    {% csrf_token %} 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+      <input class="form-control me-2 " type="search" placeholder="Search profile" name="name" aria-label="Search">
+      <button class="btn btn-outline-success " type="submit">Search</button>
+
+  </form>
+</div>
 <section class="py-5">
     <div class="container">
       <div class="row">

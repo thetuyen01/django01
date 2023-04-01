@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'category',
     'cart',
     'core',
-    'account'
+    'account',
+    'chatapp'
 ]
 
 MIDDLEWARE = [
@@ -141,5 +142,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'vtt8757@gmail.com'
-EMAIL_HOST_PASSWORD = 'aokauajphzudlvau'
+EMAIL_HOST_USER = 'litbach56@gmail.com'
+EMAIL_HOST_PASSWORD = 'inxxsfxdxpblreve'
